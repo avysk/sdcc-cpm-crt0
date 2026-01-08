@@ -1,7 +1,7 @@
 ;; crt0.s - Custom crt0.s for a Z80
 
 	.module crt0
-	.optsdcc -mz80 sdcccall(1)
+	.optsdcc -mz80
 	.globl	_main
 
 	.area	_HEADER (ABS)
@@ -196,9 +196,9 @@ _f_size::
 	call	5
 	pop	ix
 	ld	h,#0x00
-	ld	l,(ix+#0x23)
-	ld	d,(ix+#0x21)
-	ld	e,(ix+#0x22)
+	ld	l,0x23(ix)
+	ld	d,0x21(ix)
+	ld	e,0x22(ix)
 	ret
 
 	.area   _GSINIT
@@ -206,7 +206,7 @@ gsinit:
 	; Initialize global/static variables
 	ld	bc,#l__DATA
 	ld	a,b
-	or	a,c
+	or	c
 	; if there is no data to initialize, skip
 	jr	Z,zeroed_data
 	; write zero to first byte of data segment
@@ -214,7 +214,7 @@ gsinit:
 	ld	(hl),#0x00
 	dec	bc
 	ld	a,b
-	or	a,c
+	or	c
 	; if we had to initialize only one byte, done
 	jr	Z,zeroed_data
 	; otherwise, repeatedly copy (just written zero) to the next byte
@@ -226,7 +226,7 @@ zeroed_data:
 
 	ld	bc, #l__INITIALIZER
 	ld	a, b
-	or	a, c
+	or	c
 	jr	Z, gsinit_next
 	ld	de, #s__INITIALIZED
 	ld	hl, #s__INITIALIZER
