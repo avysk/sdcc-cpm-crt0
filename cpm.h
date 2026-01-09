@@ -65,4 +65,4 @@ uint8_t f_write(uint8_t file_number, const char record[static 128]);
  *  \param [in] size Size of the buffer.
  *  \return Pointer to buffer on success, NULL on EOF.
  */
-char *gets(char *s, uint16_t size);
+char *cpm_gets(char *s, uint16_t size);

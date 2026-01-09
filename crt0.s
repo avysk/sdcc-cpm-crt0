@@ -68,7 +68,7 @@ _putchar::
 ;; Input: (16-bit value in HL) pointer to buffer
 ;;        (16-bit value in DE) buffer size
 ;; Output: (16-bit value in DE) pointer to buffer or NULL on error
-_gets::
+_cpm_gets::
 	push	hl		; save buffer pointer
 	dec	de		; save space for null terminator
 	ld	(hl),#0	; initialize empty string
