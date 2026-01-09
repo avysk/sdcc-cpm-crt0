@@ -64,6 +64,45 @@ _putchar::
 	ld	c,#2	; BDOS C_WRITE
 	jp	5
 
+;; gets implementation for CP/M
+;; Input: (16-bit value in HL) pointer to buffer
+;;        (16-bit value in DE) buffer size
+;; Output: (16-bit value in DE) pointer to buffer or NULL on error
+_gets::
+	push	hl		; save buffer pointer
+	dec	de		; save space for null terminator
+	ld	(hl),#0	; initialize empty string
+gets_loop:
+	push	de
+	push	hl
+	call	_getchar
+	pop	hl
+	pop	de
+	; check for EOF
+	cp	#0x1A		; CP/M EOF marker
+	jr	z,gets_eof
+	; check for newline
+	cp	#'\r'
+	jr	nz,gets_not_cr
+	ld	(hl),#'\n'
+	inc	hl
+	jr	gets_done
+gets_not_cr:
+	ld	(hl),a
+	inc	hl
+	cp	#'\n'
+	jr	z,gets_done
+	dec	de
+	jr	nz,gets_loop
+gets_done:
+	ld	(hl),#0	; null terminate
+	pop	de		; restore buffer pointer and return in DE
+	ret
+gets_eof:
+	ld	de,#0x0000	; return NULL on EOF
+	pop	hl		; clean up stack
+	ret
+
 
 zero_fcb_fields:
 	ld	hl,#0x000C
