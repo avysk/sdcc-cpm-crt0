@@ -1,7 +1,6 @@
 ;; crt0.s - Custom crt0.s for a Z80
 
 	.module crt0
-	.optsdcc -mz80
 	.globl	_main
 
 	.area	_HEADER (ABS)
